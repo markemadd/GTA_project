@@ -13,10 +13,7 @@ SOURCES += \
     door.cpp \
     enemy.cpp \
     franklin.cpp \
-    game.cpp \
     gameover.cpp \
-    graph.cpp \
-    home.cpp \
     main.cpp \
     gta.cpp \
     power_pellets.cpp \
@@ -27,11 +24,8 @@ HEADERS += \
     door.h \
     enemy.h \
     franklin.h \
-    game.h \
     gameover.h \
-    graph.h \
     gta.h \
-    home.h \
     power_pellets.h \
     widgets.h
 

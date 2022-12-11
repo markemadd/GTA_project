@@ -1,8 +1,3 @@
-#include "franklin.h"
-#include "bullets.h"
-#include "enemy.h"
-#include "power_pellets.h"
-#include "widgets.h"
 #include <QApplication>
 #include <iostream>
 #include <QGraphicsView>
@@ -17,8 +12,12 @@
 #include <QKeyEvent>
 #include <QBrush>
 #include <QElapsedTimer>
+#include "franklin.h"
+#include "bullets.h"
+#include "enemy.h"
+#include "power_pellets.h"
+#include "widgets.h"
 #include "door.h"
-#include "game.h"
 
 
 slots void setDoor(bool flag1, QGraphicsScene* scene1){
@@ -114,12 +113,6 @@ int main(int argc, char *argv[])
                 scene.addItem(&boardItems[i][j]);
 
             }
-//                Widgets *lives,*bullets;
-//                lives = new Widgets("Lives: ", 3, 500, 0);
-//                bullets = new Widgets("bullets left ", 4, 300, 0);
-//                connect(Franklin, SIGNAL(timer()),lives,SLOT(timer));
-
-
 
 
                 door door1;
@@ -135,40 +128,27 @@ int main(int argc, char *argv[])
                 scene.addItem(&bullet3);
                 Bullets bullet4(border,8,8);
                 scene.addItem(&bullet4);
-                Widgets *lives,*time_left/*,*state*/;
+                Widgets *lives,*time_left;
                 time_left=new Widgets("Time Left: ",5, 50, 20);
                 scene.addItem(time_left);
                 Enemy enemy1(border,7,2);
                 scene.addItem(&enemy1);
                 Enemy enemy2(border,7,7);
                 scene.addItem(&enemy2);
-                Franklin franklin(border, &enemy1, &enemy2,&scene,&door1,&power1,&power2,&bullet1,&bullet2,&bullet3,&bullet4,time_left);
+                Franklin franklin(border, &enemy1, &enemy2,nullptr,&scene,&door1,&power1,&power2,&bullet1,&bullet2,&bullet3,&bullet4,time_left);
                 scene.addItem(&franklin);
                 enemy1.setFraklin(&franklin);
                 enemy2.setFraklin(&franklin);
 
 
-               // game game1(&franklin,&enemy1,&enemy2,&scene,&door1,&power1,&power2,&bullet1,&bullet2,&bullet3,&bullet4,time_left);
-
-//                enemy1.setdRow(franklin.getRow());
-//                enemy1.setdCol(franklin.getCol());
-//                enemy2.setdRow(franklin.getRow());
-//                enemy2.setdCol(franklin.getCol());
-
-                qDebug() << "here1";
-
                franklin.setFlag(QGraphicsPixmapItem::ItemIsFocusable);
                franklin.setFocus();
                lives = new Widgets("Lives: ", 3, 400, 20);
-//               state = new Widgets("state: ",1, 50,0);
-//               time_left = new Widgets("Time Left: ",5, 50, 20);
+
                QObject::connect(&franklin, SIGNAL(decrease_health()),lives,SLOT(timers()));
                scene.addItem(lives);
-               //QObject::connect(&franklin, SIGNAL(decrease_time()),time_left,SLOT(timers()));
 
-//               scene.addItem(state);
                QObject::connect(&franklin,SIGNAL(winner()),&franklin,SLOT(win()));
-               qDebug() << "here4";
                //timer to keep checking if flag changed from false to true
                QTimer* flagTimer=new QTimer;
                QObject::connect(flagTimer,SIGNAL(timeout()),&franklin,SLOT(collision()));

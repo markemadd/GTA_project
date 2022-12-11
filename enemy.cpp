@@ -15,26 +15,9 @@ Enemy::Enemy(int border[10][10], int r, int c) {
       data[i][j] = border[i][j];
   QTimer *timer = new QTimer;
   QObject::connect(timer, SIGNAL(timeout()), this, SLOT(enemyMove()));
-  timer->start(2000);
-  /*     s=std::make_pair(rowE,columnE);
-       d=std::make_pair(drow1,dcol1);
-       search(data,s,d)*/
-  ;
-
-  //    d_E = new int*[10];
-  //    for(int i=0; i<10; i++)
-  //        *(d_E+i) = new int[10];
-  //    if (liveE == 0){
-  //        scene()->removeItem(enemy);
-  //    pathIndex = 0;
-  //        graph = new Graph(boardData);
-  //        switch(index)
-  //        {
-  //        case 0: path = graph->Shortestpath(getposE(), getposE());break;
-  //        case 1: path = graph->Shortestpath(getposE(), getposE());break;
-  //        case 2: path = graph->Shortestpath(getposE(), getposE());break;
-  //        case 3: path = graph->Shortestpath(getposE(), getposE());break;
-  //        }
+  timer->start(1000);
+  collisionTimer.connect(&collisionTimer,SIGNAL(timeout()),this,SLOT(checkCollision()));
+  collisionTimer.start(1000);
 }
 
 void Enemy::setFraklin(Franklin *frank) { franklin = frank; }
@@ -53,7 +36,6 @@ void Enemy::enemyMove() {
     rowE = row;
     columnE = col;
     setPos(50 + col * 50, 50 + row * 50);
-    //        qDebug()<<"hello3";
   }
 }
 //       int  moveE=arc4random()%4;
@@ -151,7 +133,6 @@ void Enemy::search(int graph[10][10], pair1 s, pair1 d) {
   nodeArray[i][j].parentColumn = j;
   std::set<pair2> openList;
   openList.insert(std::make_pair(0.0, std::make_pair(i, j)));
-  // bool found=false;
   while (!openList.empty()) {
     pair2 p = *openList.begin();
     openList.erase(openList.begin());
@@ -164,8 +145,6 @@ void Enemy::search(int graph[10][10], pair1 s, pair1 d) {
         nodeArray[i - 1][j].parentRow = i;
         nodeArray[i - 1][j].parentColumn = j;
         Path(nodeArray, d);
-        // found=true;
-        //                 qDebug() << "a*1";
         return;
       } else if (closedList[i - 1][j] == false &&
                  isUnblocked(graph, i - 1, j) == true) {
@@ -187,8 +166,6 @@ void Enemy::search(int graph[10][10], pair1 s, pair1 d) {
         nodeArray[i + 1][j].parentRow = i;
         nodeArray[i + 1][j].parentColumn = j;
         Path(nodeArray, d);
-        // found=true;
-        //                 qDebug() << "a*2";
         return;
       } else if (closedList[i + 1][j] == false &&
                  isUnblocked(graph, i + 1, j) == true) {
@@ -210,8 +187,6 @@ void Enemy::search(int graph[10][10], pair1 s, pair1 d) {
         nodeArray[i][j + 1].parentRow = i;
         nodeArray[i][j + 1].parentColumn = j;
         Path(nodeArray, d);
-        // found=true;
-        //                 qDebug() << "a*3";
         return;
       } else if (closedList[i][j + 1] == false &&
                  isUnblocked(graph, i, j + 1) == true) {
@@ -233,8 +208,6 @@ void Enemy::search(int graph[10][10], pair1 s, pair1 d) {
         nodeArray[i][j - 1].parentRow = i;
         nodeArray[i][j - 1].parentColumn = j;
         Path(nodeArray, d);
-        // found=true;
-        //                 qDebug() << "a*4";
         return;
       } else if (closedList[i][j - 1] == false &&
                  isUnblocked(graph, i, j - 1) == true) {
@@ -253,4 +226,16 @@ void Enemy::search(int graph[10][10], pair1 s, pair1 d) {
     }
   }
   return;
+}
+void Enemy::checkCollision() {
+  QList<QGraphicsItem *> values = collidingItems();
+  for (int i = 0; i < values.size(); i++) {
+    if ((typeid(*values[i]) == typeid(Franklin)) && (franklin->getPowerful() == false)) {
+        franklin->setlives(franklin->getLivesF() - 1);
+        emit franklin->decrease_health();
+      if (franklin->getLivesF() == 0) {
+        emit franklin->loser();
+      }
+    }
+  }
 }

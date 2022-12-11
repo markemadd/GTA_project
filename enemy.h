@@ -38,13 +38,13 @@ class Enemy:public QObject, public QGraphicsPixmapItem
     int rowE;
     int columnE;
     int data [10][10];
-    //int **d_E;
     std::stack<pair1> finalPath;
     int drow1;
     int dcol1;
     pair1 s;
     pair1 d;
     Franklin* franklin;
+    QTimer collisionTimer;
 public:
    Enemy(int boardData[10][10], int r, int c);
    void setFraklin(Franklin* frank);
@@ -64,6 +64,7 @@ public:
    void setdCol(int dcol);
 public slots:
    void enemyMove();
+   void checkCollision();
 };
 
 #endif // ENEMY_H
